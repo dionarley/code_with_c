@@ -1,0 +1,4 @@
+O Código do Stress Test de Alta Precisão
+Abaixo está uma implementação otimizada que utiliza a série de Chudnovsky.
+
+Nota: Este código requer a biblioteca libgmp. Em sistemas Arch/Void (que você utiliza), instale com sudo pacman -S gmp ou xbps-install -S gmp-devel.
