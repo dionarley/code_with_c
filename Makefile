@@ -7,9 +7,9 @@ LDFLAGS = -pthread
 SRC = src
 BIN = bin
 
-.PHONY: all build build-test test test-v1 test-v2 test-progress clean get-doctest
+.PHONY: all build build-test build-tui test test-v1 test-v2 test-progress clean get-doctest
 
-all: $(BIN)/stress_pi $(BIN)/stress_pi_test $(BIN)/stress_pi_progress
+all: $(BIN)/stress_pi $(BIN)/stress_pi_test $(BIN)/stress_pi_progress $(BIN)/tui
 
 get-doctest:
 	@if [ ! -f doctest.h ]; then \
@@ -25,6 +25,9 @@ $(BIN)/stress_pi_test: $(SRC)/stress_pi_test.cpp $(SRC)/pi_lib.cpp | $(BIN)
 
 $(BIN)/stress_pi_progress: $(SRC)/stress_pi_progress.cpp | $(BIN)
 	$(CXX) $(CXXFLAGS) $(SRC)/stress_pi_progress.cpp -o $(BIN)/stress_pi_progress $(LDFLAGS)
+
+$(BIN)/tui: $(SRC)/tui.cpp | $(BIN)
+	$(CXX) $(CXXFLAGS) $(SRC)/tui.cpp -o $(BIN)/tui $(LDFLAGS)
 
 $(BIN):
 	mkdir -p $(BIN)
@@ -48,4 +51,6 @@ test-progress: $(BIN)/stress_pi_progress
 	$(BIN)/stress_pi_progress
 
 clean:
-	rm -f $(BIN)/stress_pi $(BIN)/stress_pi_test $(BIN)/stress_pi_v2 $(BIN)/stress_pi_progress doctest.h
+	rm -f $(BIN)/stress_pi $(BIN)/stress_pi_test $(BIN)/stress_pi_v2 $(BIN)/stress_pi_progress $(BIN)/tui doctest.h
+
+build-tui: $(BIN)/tui
