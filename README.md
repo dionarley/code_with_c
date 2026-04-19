@@ -2,13 +2,12 @@
 
 Projeto C++ para cálculo de Pi com stress testing de CPU e memória.
 
-## Objetivo
+## Estrutura
 
-Este projeto implementa métodos para calcular o valor de Pi enquanto estressa a CPU, útil para:
-- Teste de estabilidade de hardware
-- Stress test térmico
-- Benchmarking
-- Validação de precisões
+```
+src/        # Código fonte
+bin/       # Binários compilados
+```
 
 ## Implementações
 
@@ -21,7 +20,7 @@ Este projeto implementa métodos para calcular o valor de Pi enquanto estressa a
 ## Instalação
 
 ```bash
-# Compilar tudo
+cd src
 ./build_all.sh
 
 # Ou com make
@@ -31,11 +30,15 @@ make build
 ## Uso Rápido
 
 ```bash
+cd src
+
 # Stress test básico (1 bilhão de passos)
 ./run.sh
 
-# Com进度 acompanhamento
+# Com progresso em arquivo
 ./run_progress.sh 100000000 pi.log 500
+
+# Ver progresso em tempo real
 tail -f pi.log
 
 # Alta precisão (GMP)
@@ -47,7 +50,7 @@ tail -f pi.log
 
 ## Testes
 
-17 casos de teste cobrindo:
+17 casos cobrindo:
 - Edge cases (0, 1 passo)
 - Precisão (1K → 10M passos)
 - Thread safety
@@ -60,8 +63,8 @@ make test
 
 ## Documentação
 
-- `DOCS.md` - Documentação técnica detalhada
-- `AGENTS.md` - guidelines para agentes
+- `DOCS.md` - Documentação técnica
+- `AGENTS.md` - Guidelines para agentes
 
 ## Requisitos
 
