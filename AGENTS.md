@@ -13,31 +13,39 @@ This repository contains C++ stress testing implementations for calculating Pi u
 
 ## Build Commands
 
-### Basic Build (stress_pi v1)
+### Build All
 ```bash
-g++ -O3 -pthread stress_pi.cpp -o stress_pi
-```
-
-### High-Precision Build (stress_pi v2 with GMP)
-```bash
-g++ -O3 stress_pi_v2.cpp -o stress_pi_v2 -lgmpxx -lgmp
+make build         # Build stress_pi
+make build-test    # Build test binary
+make build-v2      # Build GMP version (requires GMP library)
+make build-progress # Build progress version
+make build          # Build all
 ```
 
 ### Run Compiled Binaries
 ```bash
-./stress_pi        # Multi-threaded version
-./stress_pi_v2    # GMP high-precision version
+./bin/stress_pi           # Multi-threaded version
+./bin/stress_pi_v2 1000  # GMP (argument = digits)
+./bin/tui            # Interactive menu
+./bin/tui 1         # Run option directly
+```
+
+### TUI (Menu Interativo)
+```bash
+cd /home/dnly/stage/code_with_c
+./bin/tui              # Show menu
+./bin/tui 1            # Stress test básico
+./bin/tui 2            # Com progresso
+./bin/tui 3            # Alta precisão (GMP)
+./bin/tui 4            # Testes unitários
+./bin/tui 5            # Compilar tudo
 ```
 
 ### Build & Test Commands
 ```bash
 make get-doctest   # Download doctest.h (first time only)
-make build         # Build stress_pi
-make build-test    # Build test binary
-make build-progress # Build progress version
 make test          # Run all unit tests
 make test-v1       # Run stress_pi binary
-make test-progress # Run with progress to file
 make clean         # Clean build artifacts
 ```
 

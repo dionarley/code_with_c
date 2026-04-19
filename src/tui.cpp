@@ -1,26 +1,60 @@
 #include <iostream>
 #include <cstdlib>
+#include <sys/stat.h>
 
-void print_header() {
+bool file_exists(const std::string& filename) {
+    struct stat buffer;
+    return (stat(filename.c_str(), &buffer) == 0);
+}
+
+void run_option(int choice) {
+    switch (choice) {
+        case 1:
+            if (!file_exists("../bin/stress_pi")) {
+                std::cout << "Compilando stress_pi...\n";
+                system("cd .. && make build");
+            }
+            system("cd .. && bin/stress_pi");
+            break;
+        case 2:
+            if (!file_exists("../bin/stress_pi_progress")) {
+                std::cout << "Compilando stress_pi_progress...\n";
+                system("cd .. && make build-progress");
+            }
+            system("cd .. && bin/stress_pi_progress 100000000 ../pi_progress.log 500");
+            break;
+        case 3:
+            if (!file_exists("../bin/stress_pi_v2")) {
+                std::cout << "Compilando stress_pi_v2...\n";
+                system("cd .. && make build-v2");
+            }
+            system("cd .. && bin/stress_pi_v2 1000");
+            break;
+        case 4:
+            if (!file_exists("../bin/stress_pi_test")) {
+                std::cout << "Compilando stress_pi_test...\n";
+                system("cd .. && make build-test");
+            }
+            system("cd .. && bin/stress_pi_test");
+            break;
+        case 5:
+            system("cd .. && make build && make build-test && make build-v2");
+            break;
+        case 0:
+        default:
+            break;
+    }
+}
+
+int main(int argc, char* argv[]) {
     std::cout << "\n";
     std::cout << "╔══════════════════════════════════════════════╗\n";
     std::cout << "║     PI STRESS TEST - MENU INTERATIVO       ║\n";
     std::cout << "╚══════════════════════════════════════════════╝\n\n";
-}
-
-int main(int argc, char* argv[]) {
-    print_header();
 
     if (argc > 1) {
         int choice = atoi(argv[1]);
-        switch (choice) {
-            case 1: system("cd .. && bin/stress_pi"); break;
-            case 2: system("cd .. && bin/stress_pi_progress 100000000 ../pi_progress.log 500"); break;
-            case 3: system("cd .. && bin/stress_pi_v2 1000"); break;
-            case 4: system("cd .. && bin/stress_pi_test"); break;
-            case 5: system("cd .. && make build && make build-test"); break;
-            case 0: return 0;
-        }
+        run_option(choice);
         return 0;
     }
 
