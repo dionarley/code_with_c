@@ -1,0 +1,11 @@
+# Binários (não tracked, apenas para distribuição)
+# bin/
+
+# Logs
+*.log
+
+# Build CMake
+build/
+
+# Old README
+README.txt

@@ -1,14 +1,15 @@
-# Makefile para build e testar sem CMake
-# Suporta both: CMake (com FetchContent) e Manual
+# Makefile para build e testar
+# Estrutura: src/ (código), bin/ (binários)
 
 CXX = g++
 CXXFLAGS = -O3 -std=c++17 -Wall -Wextra
 LDFLAGS = -pthread
+SRC = src
+BIN = bin
 
-# Targets
-.PHONY: all build build-progress test test-v1 test-v2 test-progress clean get-doctest
+.PHONY: all build build-test test test-v1 test-v2 test-progress clean get-doctest
 
-all: stress_pi stress_pi_test stress_pi_progress
+all: $(BIN)/stress_pi $(BIN)/stress_pi_test $(BIN)/stress_pi_progress
 
 get-doctest:
 	@if [ ! -f doctest.h ]; then \
@@ -16,33 +17,35 @@ get-doctest:
 		curl -L -o doctest.h "https://raw.githubusercontent.com/doctest/doctest/v2.4.11/doctest/doctest.h"; \
 	fi
 
-build: get-doctest
-	$(CXX) $(CXXFLAGS) stress_pi.cpp pi_lib.cpp -o stress_pi $(LDFLAGS)
+$(BIN)/stress_pi: $(SRC)/stress_pi.cpp $(SRC)/pi_lib.cpp | $(BIN)
+	$(CXX) $(CXXFLAGS) $(SRC)/stress_pi.cpp $(SRC)/pi_lib.cpp -o $(BIN)/stress_pi $(LDFLAGS)
 
-build-test: get-doctest
-	$(CXX) $(CXXFLAGS) -I. stress_pi_test.cpp pi_lib.cpp -o stress_pi_test $(LDFLAGS)
+$(BIN)/stress_pi_test: $(SRC)/stress_pi_test.cpp $(SRC)/pi_lib.cpp | $(BIN)
+	$(CXX) $(CXXFLAGS) -I. $(SRC)/stress_pi_test.cpp $(SRC)/pi_lib.cpp -o $(BIN)/stress_pi_test $(LDFLAGS)
 
-test: build-test
-	./stress_pi_test
+$(BIN)/stress_pi_progress: $(SRC)/stress_pi_progress.cpp | $(BIN)
+	$(CXX) $(CXXFLAGS) $(SRC)/stress_pi_progress.cpp -o $(BIN)/stress_pi_progress $(LDFLAGS)
 
-test-v1: build
-	./stress_pi | head -5
+$(BIN):
+	mkdir -p $(BIN)
 
-test-v2: stress_pi_v2
-	./stress_pi_v2
+build: get-doctest $(BIN)/stress_pi
 
-build-progress:
-	$(CXX) $(CXXFLAGS) stress_pi_progress.cpp -o stress_pi_progress $(LDFLAGS)
+build-test: get-doctest $(BIN)/stress_pi_test
 
-test-progress: build-progress
-	./stress_pi_progress
+test: $(BIN)/stress_pi_test
+	$(BIN)/stress_pi_test
+
+test-v1: $(BIN)/stress_pi
+	$(BIN)/stress_pi | head -5
+
+test-v2: $(BIN)/stress_pi_v2
+	$(BIN)/stress_pi_v2
+
+build-progress: $(BIN)/stress_pi_progress
+
+test-progress: $(BIN)/stress_pi_progress
+	$(BIN)/stress_pi_progress
 
 clean:
-	rm -f stress_pi stress_pi_test stress_pi_v2 doctest.h
-
-# Build with CMake (optional)
-cmake-build:
-	mkdir -p build && cd build && cmake .. && make
-
-cmake-test:
-	cd build && ctest --output-on-failure
+	rm -f $(BIN)/stress_pi $(BIN)/stress_pi_test $(BIN)/stress_pi_v2 $(BIN)/stress_pi_progress doctest.h
